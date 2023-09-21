@@ -1,0 +1,4 @@
+- source: talk.qmd
+  quarto-pub:
+    - id: 21620121-6bab-4f19-9a59-1a5020684eec
+      url: 'https://chendaniely.quarto.pub/rstatsnyc-rmd-jupyter-quarto'

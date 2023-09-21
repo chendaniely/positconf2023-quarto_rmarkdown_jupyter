@@ -1,0 +1,63 @@
+---
+title: "Example Analysis"
+subtitle: "RMarkdown"
+author: "Daniel Chen"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(writexl)
+```
+
+## Load Data
+
+```{r}
+cmv <- read_excel("data/cmv.xlsx")
+head(cmv)
+```
+
+
+## Filter Data
+
+```{r}
+cmv_subset <- cmv %>%
+  filter(age > 65)
+```
+
+## Save Data
+
+```{r}
+write_xlsx(cmv_subset, "data/cmv_subset.xlsx")
+```
+
+## Tidy Data
+
+```{r}
+cmv_tidy <- cmv %>%
+  pivot_longer(
+    donor_negative:donor_positive,
+    names_to = 'donor_status',
+    values_to = 'recipient_status'
+  )
+```
+
+## Plot Data
+
+```{r}
+ggplot(cmv_tidy, aes(x = age)) + geom_histogram()
+```
+
+## Fit a Model
+
+```{r}
+mod <- glm(
+  cmv ~ age + prior.radiation + donor_status,
+  data = cmv_tidy,
+  family = "binomial"
+)
+
+summary(mod)
+```

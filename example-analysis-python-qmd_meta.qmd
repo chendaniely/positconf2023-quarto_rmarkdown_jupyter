@@ -1,0 +1,10 @@
+---
+title: "Example Analysis"
+subtitle: "Quarto"
+author: "Daniel Chen"
+format: html
+---
+
+Here is a figure that was rendered in a python `.ipynb` jupyter notebook.
+
+{{< embed example-analysis-python-qmd_meta.ipynb#fig-age_hist >}}

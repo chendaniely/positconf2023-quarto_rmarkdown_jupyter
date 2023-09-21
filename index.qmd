@@ -1,0 +1,635 @@
+---
+title: "Moving to Quarto from RMarkdown and Python Jupyter Notebooks"
+subtitle: "posit::conf(2023)"
+author: "Daniel Chen"
+format:
+  revealjs:
+    embed-resources: true
+    #multiplex: true
+    theme: simple
+    slide-number: c/t
+    show-slide-number: all
+    hash-type: number
+---
+
+# Literate Programming
+
+## Why Literate Programming?
+
+::: columns
+::: {.column width="50%"}
+
+- Data Scientist
+  - RMarkdown + Jupyter Notebooks
+    - Analysis
+    - Reports + Documentation
+
+- Academic
+  - Papers
+:::
+
+::: {.column width="50%"}
+- Technical Writer
+  - Blog
+  - Website
+  - Presentation
+  - Book
+
+:::
+:::
+
+## RMarkdown
+
+::: columns
+::: {.column width="50%"}
+![](images/rmarkdown-cover.png){width=70%}
+:::
+
+::: {.column width="50%"}
+
+![](images/rmarkdown-hex.png)
+
+:::
+:::
+
+## Code Chunks
+
+``````{verbatim}
+```{r}
+cmv <- read_excel("data/cmv.xlsx")
+head(cmv)
+```
+``````
+
+## RMarkdown Document
+
+``````{verbatim}
+---
+title: "example-analysis"
+author: "Daniel Chen"
+output: html_document
+---
+```{r setup, include=FALSE}
+library(tidyverse)
+library(readxl)
+library(writexl)
+```
+## Load Data
+Retrospective Cohort Study of the Effects of
+Donor KIR genotype on the reactivation of cytomegalovirus (CMV)
+after myeloablative allogeneic hematopoietic stem cell transplant.
+```{r}
+cmv <- read_excel("data/cmv.xlsx")
+head(cmv)
+```
+``````
+
+## Render `.Rmd` with `{rmarkdown}`
+
+Demo file: `example-analysis.Rmd`
+
+<br>
+Render Command:
+
+```shell
+Rscript -e "rmarkdown::render('example-analysis.Rmd')"
+```
+
+Specify output file (and location):
+
+```shell
+Rscript -e "rmarkdown::render(
+    input = 'example-analysis.Rmd',
+    output_file = 'output/010-example-analysis-rmd.html')"
+```
+
+## Render `.Rmd` with `quarto`
+
+Demo file: `example-analysis.Rmd`
+
+<br>
+Render Command:
+```shell
+quarto render example-analysis.Rmd
+```
+
+Specify output file:
+```shell
+# output folders only work with quarto projects
+touch _quarto.yml
+
+quarto render example-analysis.Rmd \
+    --toc \
+    --output output/020-example-analysis-rmd-qmd.html
+```
+
+- `quarto` is command line tool!
+
+## Caveat: Single Quarto Document {.smaller}
+
+- Output directory Github Discussion
+    - [https://github.com/quarto-dev/quarto-cli/discussions/2171](https://github.com/quarto-dev/quarto-cli/discussions/2171)
+- Pre and Post Render
+    - [https://quarto.org/docs/projects/scripts.html#pre-and-post-render](https://quarto.org/docs/projects/scripts.html#pre-and-post-render)
+
+## Project templates {.smaller}
+
+::: columns
+::: {.column width="50%"}
+
+[DCR 2018: Structuring Your (Data Science/Analysis) Projects](https://www.youtube.com/watch?v=UQHz38s3DyA)
+
+![](images/talk-dcr2018-structure.png){width=70%}
+
+:::
+
+::: {.column width="50%"}
+
+[NYR 2019: Building Reproducible and Replicable Projects](https://www.youtube.com/watch?v=t-vY9FeIIMk)
+
+![](images/talk-nyr2019-workflow.png){width=70%}
+
+:::
+:::
+
+[Tiffany Timbers](https://www.tiffanytimbers.com/) DSCI 310: Reproducible and trustworthy workflows for data science:
+[https://ubc-dsci.github.io/dsci-310-student/](https://ubc-dsci.github.io/dsci-310-student/)
+
+
+## Quarto {.smaller}
+
+::: columns
+::: {.column width="50%"}
+![](images/quarto-homepage.png)
+:::
+
+::: {.column width="50%"}
+[https://quarto.org/](https://quarto.org/)
+
+- Plain text source document
+- Literate programming
+- Multiple language support
+  - Even in the same document!
+- Multiple output formats
+  - Pandoc + Markdown
+- Familiar
+
+:::{.footnote}
+- Quarto Gallery: [https://quarto.org/docs/gallery/](https://quarto.org/docs/gallery/)
+- Quarto Guide: [https://quarto.org/docs/guide/](https://quarto.org/docs/guide/)
+- Quarto Reference: [https://quarto.org/docs/reference/](https://quarto.org/docs/reference/)
+:::
+
+:::
+:::
+
+
+## Quarto Documents
+
+::: columns
+::: {.column width="50%"}
+RMarkdown YAML
+
+```yaml
+---
+title: "Example Analysis"
+subtitle: "RMarkdown"
+author: "Daniel Chen"
+output: html_document
+---
+```
+
+:::
+
+::: {.column width="50%"}
+Quarto YAML
+
+```yaml
+---
+title: "Example Analysis"
+subtitle: "Quarto"
+author: "Daniel Chen"
+format: html
+---
+```
+
+:::
+:::
+
+RMarkdown and Quarto chunk options:
+
+````{verbatim}
+```{r setup}
+#| include: false
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(writexl)
+```
+````
+
+## Render a Quarto Document
+
+Demo file: `example-analysis.qmd`
+
+<br>
+Render Command:
+```shell
+quarto render example-analysis.qmd
+```
+
+Specify output file:
+```shell
+quarto render example-analysis.Rmd \
+    --toc \
+    --output-dir output \
+    --output 030-example-analysis-rmd-qmd.html
+```
+
+# Jupyter
+
+## Notebooks {.smaller}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](images/slides-notebook-dont_like.png)
+
+[Youtube](https://www.youtube.com/watch?v=7jiPeIFXb6U)
+:::
+
+::: {.column width="50%"}
+![](images/slides-notebook-like.png)
+
+[Youtube](https://www.youtube.com/watch?v=9Q6sLbz37gk)
+:::
+
+::::
+
+## Daniel's List {.smaller}
+
+- Technical Writing
+  - ✅ Literate programming
+  - ❌ Editing JSON
+- Data Science
+  - More an output format than a source document
+  - ✅ Great for posting code+output (e.g. a workshop)
+  - ❌ Not great for source control collaborative document
+- Teaching
+  - ✅ `nbgrader` for course assignment creation + grading
+  - ✅ Restart Kernel > Run All
+
+## Jupyter Notebooks are JSON
+
+```json
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "4a9a7246-de20-4aac-945a-b8f0e7db0ac6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import plotnine as p9\n",
+    "from plotnine import ggplot, aes, geom_histogram\n",
+    "import statsmodels.formula.api as smf"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8f8205a7-a172-492a-bb22-e24bc1fc7ce2",
+   "metadata": {},
+   "source": [
+    "## Load Data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "a0fe3045-4d26-4dba-b673-5f95ee3d635c",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>ID</th>\n",
+       "      <th>age</th>\n",
+       "      <th>prior.radiation</th>\n",
+       "      <th>aKIRs</th>\n",
+       "      <th>cmv</th>\n",
+       "      <th>donor_negative</th>\n",
+       "      <th>donor_positive</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1</td>\n",
+       "      <td>61</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>recipient_positive</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2</td>\n",
+       "      <td>62</td>\n",
+       "      <td>1</td>\n",
+       "      <td>5</td>\n",
+       "      <td>0</td>\n",
+       "      <td>recipient_negative</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>3</td>\n",
+       "      <td>63</td>\n",
+       "      <td>0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>recipient_positive</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>4</td>\n",
+       "      <td>33</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>recipient_positive</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>5</td>\n",
+       "      <td>54</td>\n",
+       "      <td>0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>0</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>recipient_positive</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   ID  age  prior.radiation  aKIRs  cmv      donor_negative  \\\n",
+       "0   1   61                0      1    1  recipient_positive   \n",
+       "1   2   62                1      5    0  recipient_negative   \n",
+       "2   3   63                0      3    0                 NaN   \n",
+       "3   4   33                1      2    0  recipient_positive   \n",
+       "4   5   54                0      6    0                 NaN   \n",
+       "\n",
+       "       donor_positive  \n",
+       "0                 NaN  \n",
+       "1                 NaN  \n",
+       "2  recipient_positive  \n",
+       "3                 NaN  \n",
+       "4  recipient_positive  "
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "cmv = pd.read_excel(\"data/cmv.xlsx\")\n",
+    "cmv.head()"
+   ]
+  },
+```
+
+## Need Something to View + Render
+
+::: columns
+::: {.column width="50%"}
+VSCode
+![](images/vscode-jupyter_notebook.png)
+
+:::
+
+::: {.column width="50%"}
+Jupyter Lab
+![](images/jupyterlab-jupyter_notebook.png)
+
+:::
+:::
+
+## Jupyter does R!
+
+- You need the `IRKernel` installed:
+  [https://github.com/IRkernel/IRkernel](https://github.com/IRkernel/IRkernel)
+
+```R
+install.packages('IRkernel')
+IRkernel::installspec() 
+```
+
+![](images/jupyter-new_launcher.png)
+
+## Render `.ipynb` with `nbconvert` {.smaller}
+
+- Demo files:
+  - `example-analysis-python.ipynb`
+  - `example-analysis-r.ipynb`
+
+Python Kernel:
+
+```shell
+jupyter nbconvert \
+    --to html \
+    --output output/040-example-analysis-python-jupyter.html \
+    --execute example-analysis-python.ipynb
+```
+
+R Kernel:
+
+```shell
+jupyter nbconvert \
+    --to html \
+    --output output/050-example-analysis-r-jupyter.html \
+    --execute example-analysis-r.ipynb 
+```
+
+(Hint: they're the same command)
+
+## Jupyter Notebook as a Source Document {.smaller}
+
+To make your version control diffing easier,
+you may want to clear the output from the notebook JSON file.
+
+<br>
+
+In `nbconvert 6.0+`, you can use`--clear-output --inplace`:
+
+```shell
+jupyter nbconvert --clear-output --inplace example-analysis-python.ipynb
+jupyter nbconvert --clear-output --inplace example-analysis-r.ipynb 
+```
+
+<br>
+
+Or use the `--to notebook` argument if you want to preserve a rendered notebook
+
+
+## Render `.ipynb` with `quarto`
+
+Takes whatever is in the notebook (no additional execution) and rendered (to html by default)
+
+```shell
+quarto render example-analysis-python.ipynb
+quarto render example-analysis-r.ipynb
+```
+
+Use `--execute` to execute the cells and render
+
+```shell
+quarto render example-analysis-python.ipynb --execute
+quarto render example-analysis-r.ipynb --execute
+```
+## Render `.ipynb` with `quarto`
+
+Python Kernel:
+
+```shell
+quarto render example-analysis-python.ipynb \
+    --to html \
+    --execute \
+    --toc \
+    --output-dir output \
+    --output 060-example-analysis-python-ipynb.html
+```
+
+R Kernel:
+
+```shell
+quarto render example-analysis-r.ipynb \
+    --to html \
+    --execute \
+    --toc \
+    --output-dir output \
+    --output 060-example-analysis-r-ipynb.html
+```
+
+## Embed Jupyter output in Quarto {.smaller}
+
+From a Jupyter notebook with code output:
+
+- Demo files:
+  - `example-analysis-python-qmd_meta.ipynb`
+  - `example-analysis-python-qmd_meta.qmd`
+
+Using a notebook with existing output:
+
+```shell
+jupyter nbconvert \
+    --to notebook \
+    --execute \
+    --inplace \
+    example-analysis-python-qmd_meta.ipynb
+```
+
+You can add quarto `#|` metadata comments to a cell,
+and use jupyter output directly in a quarto document
+
+## Embed Jupyter output in Quarto
+
+```python
+#| label: fig-age_hist
+#| fig-cap: >
+#|     A histogram of the ages in our Cytomegalovirus dataset
+ggplot(cmv_tidy, aes(x="age")) + geom_histogram()
+```
+Use a quarto shortcode:
+
+```{.markdown shortcodes=false}
+{{< embed example-analysis-python-qmd_meta.ipynb#fig-age_hist >}}
+```
+
+Render the example:
+
+```shell
+quarto render example-analysis-python-qmd_meta.qmd \
+    --to html \
+    --output-dir output \
+    --output 080-example-analysis-python-qmd_meta.html
+```
+
+:::{.footnote}
+[https://quarto.org/docs/authoring/notebook-embed.html](https://quarto.org/docs/authoring/notebook-embed.html)
+:::
+
+# Converting
+
+## `jupytext`
+
+[https://jupytext.readthedocs.io/](https://jupytext.readthedocs.io/)
+
+`Rmd` -> `qmd`
+
+```shell
+jupytext \
+    --to qmd \
+    --output output/090-convert-rmd_qmd.qmd \
+    example-analysis.Rmd
+```
+
+`ipynb` -> `qmd`
+
+```shell
+jupytext \
+    --to qmd \
+    --output output/100-convert-ipynb_qmd.qmd \
+    example-analysis-python.ipynb
+```
+
+## `quarto convert`
+
+```shell
+quarto convert example-analysis-python.ipynb \
+    --output output/120-convert-ipynb_qmd.qmd
+```
+
+# Publication
+
+## Publish your files
+
+```shell
+quarto publish             # Publish Project (ask provider)
+quarto pubish talk.qmd     # Publish document (ask provider)
+
+quarto publish quarto-pub  # Quarto.pub 
+
+quarto publish gh-pages    # GitHub Pages
+quarto publish netlify     # Netlify
+
+quarto publish connect     # RStudio Connect
+quarto publish confluence  # Confluence
+```
+
+[https://quartopub.com/](https://quartopub.com/)

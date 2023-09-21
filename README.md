@@ -1,9 +1,8 @@
-# rstatsnyc-2023-quarto
+# positconf2023-quarto_rmarkdown_jupyter
 
 View slides:
 
-- https://chendaniely.quarto.pub/rstatsnyc-rmd-jupyter-quarto/
-- https://speakerdeck.com/chendaniely/moving-to-quarto-from-rmarkdown-and-python-jupyter-notebooks
+- https://chendaniely.github.io/positconf2023-quarto_rmarkdown_jupyter/
 
 ## Setup Repository
 
@@ -20,7 +19,7 @@ jupyter kernelspec list # should see current venv as python3 kernel
 
 ```
 Available kernels:
-  python3     /home/dan/git/hub/rstatsnyc-2023-quarto/venv/share/jupyter/kernels/python3
+  python3     /home/dan/git/hub/positconf2023-quarto_rmarkdown_jupyter/venv/share/jupyter/kernels/python3
 
 ```
 
